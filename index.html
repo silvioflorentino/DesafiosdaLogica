@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Desafios da Lógica</title>
+
+    <style>
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #667eea,
+                    #764ba2
+                );
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+        }
+
+
+        .container {
+
+            width: 100%;
+            max-width: 900px;
+
+            background: white;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 15px 40px
+                rgba(0, 0, 0, 0.3);
+        }
+
+
+
+        header {
+
+            background: #5b2c83;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 25px;
+        }
+
+        header h1 {
+
+            font-size: 2.3rem;
+
+            margin-bottom: 8px;
+        }
+
+        header p {
+
+            font-size: 1rem;
+        }
+
+        .status {
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+
+            padding: 15px;
+
+            background: #f1f1f1;
+        }
+
+        .status div {
+
+            background: white;
+
+            padding: 10px 18px;
+
+            border-radius: 10px;
+
+            font-weight: bold;
+
+            box-shadow:
+                0 2px 5px
+                rgba(0, 0, 0, 0.1);
+        }
+
+
+        .game {
+
+            padding: 30px;
+        }
+
+
+
+        .tela {
+
+            text-align: center;
+        }
+
+        .tela h2 {
+
+            color: #5b2c83;
+
+            margin-bottom: 20px;
+        }
+
+        .tela p {
+
+            line-height: 1.6;
+
+            margin-bottom: 20px;
+        }
+
+
+        button {
+
+            border: none;
+
+            border-radius: 10px;
+
+            padding: 14px 25px;
+
+            font-size: 1rem;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        button:hover {
+
+            transform: scale(1.03);
+        }
+
+        button:disabled {
+
+            cursor: not-allowed;
+
+            opacity: 0.9;
+        }
+
+
+        .btn-iniciar {
+
+            background: #5b2c83;
+
+            color: white;
+
+            font-size: 1.2rem;
+        }
+
+
+        .progresso {
+
+            height: 12px;
+
+            background: #ddd;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
+            margin-bottom: 25px;
+        }
+
+        .barra {
+
+            height: 100%;
+
+            width: 0%;
+
+            background: #5b2c83;
+
+            transition: width 0.4s;
+        }
+
+        .pergunta {
+
+            text-align: left;
+        }
+
+        .nivel {
+
+            display: inline-block;
+
+            background: #ff9800;
+
+            color: white;
+
+            padding: 8px 15px;
+
+            border-radius: 20px;
+
+            margin-bottom: 15px;
+
+            font-weight: bold;
+        }
+
+        .pergunta h2 {
+
+            color: #333;
+
+            margin-bottom: 20px;
+
+            line-height: 1.4;
+        }
+
+
+        .codigo {
+
+            background: #1e1e1e;
+
+            color: #00ff88;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            margin-bottom: 25px;
+
+            font-family: Consolas, monospace;
+
+            white-space: pre-line;
+
+            font-size: 1.05rem;
+
+            overflow-x: auto;
+        }
+
+        .opcoes {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+        .opcoes button {
+
+            background: #eeeeee;
+
+            color: #222;
+
+            border: 2px solid #ddd;
+        }
+
+        .opcoes button:hover {
+
+            background: #dcd0ea;
+
+            border-color: #5b2c83;
+        }
+
+
+        .correta {
+
+            background: #4caf50 !important;
+
+            color: white !important;
+
+            border-color: #4caf50 !important;
+        }
+
+        .errada {
+
+            background: #f44336 !important;
+
+            color: white !important;
+
+            border-color: #f44336 !important;
+        }
+
+
+        .feedback {
+
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            font-weight: bold;
+
+            text-align: center;
+        }
+
+        .feedback.certo {
+
+            background: #d4edda;
+
+            color: #155724;
+        }
+
+        .feedback.erro {
+
+            background: #f8d7da;
+
+            color: #721c24;
+        }
+
+
+        .proxima {
+
+            display: none;
+
+            margin-top: 20px;
+
+            background: #5b2c83;
+
+            color: white;
+        }
+
+        .resultado {
+
+            text-align: center;
+        }
+
+        .resultado h2 {
+
+            color: #5b2c83;
+
+            font-size: 2rem;
+
+            margin-bottom: 20px;
+        }
+
+        .pontuacao-final {
+
+            font-size: 3rem;
+
+            font-weight: bold;
+
+            color: #ff9800;
+
+            margin: 20px;
+        }
+
+        .classificacao {
+
+            font-size: 1.3rem;
+
+            line-height: 1.5;
+
+            margin: 20px 0;
+        }
+
+        .reiniciar {
+
+            background: #5b2c83;
+
+            color: white;
+        }
+
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 10px;
+            }
+
+            header h1 {
+
+                font-size: 1.7rem;
+            }
+
+            .game {
+
+                padding: 20px;
+            }
+
+            .opcoes {
+
+                grid-template-columns: 1fr;
+            }
+
+            .status div {
+
+                width: 100%;
+
+                text-align: center;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <main class="container">
+
+        <header>
+
+            <h1>
+                Desafios da Lógica
+            </h1>
+
+            <p>
+                Gamificação da Lógica de Programação
+            </p>
+
+        </header>
+
+        <section class="status">
+
+            <div>
+                Pontuação:
+                <span id="pontuacao">
+                    0
+                </span>
+            </div>
+
+            <div>
+                Nível:
+                <span id="nivel">
+                    1
+                </span>
+            </div>
+
+            <div>
+                Vidas:
+                <span id="vidas">
+                    3
+                </span>
+            </div>
+
+            <div>
+                Questão:
+                <span id="questaoAtual">
+                    0
+                </span>
+                /11
+            </div>
+
+        </section>
+
+
+        <section class="game">
+
+
+
+            <section id="inicio" class="tela">
+
+                <h2>
+                    Bora ao Desafios da Lógica de programação!
+                </h2>
+
+                <p>
+                    Teste seus conhecimentos em lógica de programação,
+                    resolvendo desafios de variáveis, condicionais e laços.
+                </p>
+
+                <p>
+
+                    <strong>
+                        🟢 Nível 1:
+                    </strong>
+
+                    10 pontos por questão
+
+                    <br>
+
+                    <strong>
+                        🟡 Nível 2:
+                    </strong>
+
+                    20 pontos por questão
+
+                    <br>
+
+                    <strong>
+                        🔴 Nível 3:
+                    </strong>
+
+                    30 pontos por questão
+
+                    <br>
+
+                    <strong>
+                        Desafio bônus:
+                    </strong>
+
+                    10 pontos
+
+                </p>
+
+                <p>
+
+                    Você terá
+                    <strong>
+                        3 vidas
+                    </strong>
+
+                    para completar o desafio.
+
+                </p>
+
+                <button
+                    class="btn-iniciar"
+                    onclick="iniciarJogo()">
+
+                     Start
+
+                </button>
+
+            </section>
+
+
+            <section
+                id="jogo"
+                style="display: none;">
+
+
+                <!-- BARRA DE PROGRESSO -->
+
+                <div class="progresso">
+
+                    <div
+                        class="barra"
+                        id="barra">
+
+                    </div>
+
+                </div>
+
+
+                <div class="pergunta">
+
+
+                    <span
+                        class="nivel"
+                        id="nivelTexto">
+
+                        Nível 1
+
+                    </span>
+
+
+                    <h2
+                        id="textoPergunta">
+
+                    </h2>
+
+
+                    <div
+                        class="codigo"
+                        id="codigo">
+
+                    </div>
+
+
+                    <div
+                        class="opcoes"
+                        id="opcoes">
+
+                    </div>
+
+
+                    <div
+                        id="feedback"
+                        class="feedback">
+
+                    </div>
+
+
+                    <button
+                        id="btnProxima"
+                        class="proxima"
+                        onclick="proximaPergunta()">
+
+                        PRÓXIMA PERGUNTA
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <section
+                id="resultado"
+                class="resultado"
+                style="display: none;">
+
+
+                <h2>
+
+                    Desafio Concluído!
+
+                </h2>
+
+
+                <p>
+
+                    Você concluiu os desafios
+                    de lógica de programação.
+
+                </p>
+
+
+                <div
+                    class="pontuacao-final">
+
+                    <span
+                        id="pontuacaoFinal">
+
+                        0
+
+                    </span>
+
+                    pontos
+
+                </div>
+
+
+                <div
+                    id="classificacao"
+                    class="classificacao">
+
+                </div>
+
+
+                <button
+                    class="reiniciar"
+                    onclick="reiniciarJogo()">
+
+                    JOGAR NOVAMENTE
+
+                </button>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+
+    <script>
+
+
+        /* ===================================
+           BANCO DE PERGUNTAS
+        ==================================== */
+
+        const perguntas = [
+
+            {
+                nivel: 1,
+
+                pergunta:
+                    "Qual será o valor final da variável x?",
+
+                codigo:
+`x = 5
+x = x + 3`,
+
+                opcoes:
+                    ["5", "8", "3", "15"],
+
+                resposta:
+                    "8"
+            },
+
+
+            {
+                nivel: 1,
+
+                pergunta:
+                    "Qual valor será armazenado na variável resultado?",
+
+                codigo:
+`a = 10
+b = 2
+resultado = a + b`,
+
+                opcoes:
+                    ["8", "12", "20", "5"],
+
+                resposta:
+                    "12"
+            },
+
+
+            {
+                nivel: 1,
+
+                pergunta:
+                    "Qual operador é utilizado para realizar uma comparação de igualdade?",
+
+                codigo:
+`if idade == 18:
+    print("Maior de idade")`,
+
+                opcoes:
+                    ["=", "==", "!=", ">"],
+
+                resposta:
+                    "=="
+            },
+
+
+            {
+                nivel: 1,
+
+                pergunta:
+                    "Qual será o valor de x?",
+
+                codigo:
+`x = 10
+x = x - 4`,
+
+                opcoes:
+                    ["4", "6", "10", "14"],
+
+                resposta:
+                    "6"
+            },
+
+
+            {
+                nivel: 2,
+
+                pergunta:
+                    "O que será exibido pelo programa?",
+
+                codigo:
+`x = 10
+
+if x > 5:
+    print("Maior")`,
+
+                opcoes:
+                    [
+                        "Menor",
+                        "Igual",
+                        "Maior",
+                        "Nada"
+                    ],
+
+                resposta:
+                    "Maior"
+            },
+
+
+            {
+                nivel: 2,
+
+                pergunta:
+                    "Qual será o resultado?",
+
+                codigo:
+`idade = 16
+
+if idade >= 18:
+    print("Pode votar")
+else:
+    print("Não pode votar")`,
+
+                opcoes:
+                    [
+                        "Pode votar",
+                        "Não pode votar",
+                        "Erro",
+                        "16"
+                    ],
+
+                resposta:
+                    "Não pode votar"
+            },
+
+
+            {
+                nivel: 2,
+
+                pergunta:
+                    "Qual será o valor final de x?",
+
+                codigo:
+`x = 5
+
+if x > 3:
+    x = 10`,
+
+                opcoes:
+                    [
+                        "3",
+                        "5",
+                        "10",
+                        "0"
+                    ],
+
+                resposta:
+                    "10"
+            },
+
+
+            {
+                nivel: 3,
+
+                pergunta:
+                    "Quantas vezes a mensagem será exibida?",
+
+                codigo:
+`for i in range(3):
+    print("Olá")`,
+
+                opcoes:
+                    [
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                    ],
+
+                resposta:
+                    "3"
+            },
+
+
+            {
+                nivel: 3,
+
+                pergunta:
+                    "Qual será o valor final de contador?",
+
+                codigo:
+`contador = 0
+
+for i in range(5):
+    contador = contador + 1`,
+
+                opcoes:
+                    [
+                        "0",
+                        "1",
+                        "4",
+                        "5"
+                    ],
+
+                resposta:
+                    "5"
+            },
+
+
+            {
+                nivel: 3,
+
+                pergunta:
+                    "Quantas vezes o laço será executado?",
+
+                codigo:
+`x = 1
+
+while x <= 4:
+    print(x)
+    x = x + 1`,
+
+                opcoes:
+                    [
+                        "3",
+                        "4",
+                        "5",
+                        "Infinitas"
+                    ],
+
+                resposta:
+                    "4"
+            },
+
+
+            {
+                nivel: 3,
+
+                bonus: true,
+
+                pergunta:
+                    "⭐ DESAFIO BÔNUS: Qual será o valor final de x?",
+
+                codigo:
+`x = 2
+
+for i in range(4):
+    x = x + 2`,
+
+                opcoes:
+                    [
+                        "6",
+                        "8",
+                        "10",
+                        "12"
+                    ],
+
+                resposta:
+                    "10"
+            }
+
+        ];
+
+
+        let indice = 0;
+
+        let pontuacao = 0;
+
+        let vidas = 3;
+
+        let nivel = 1;
+
+        let respondeu = false;
+
+
+        function iniciarJogo() {
+
+
+            indice = 0;
+
+            pontuacao = 0;
+
+            vidas = 3;
+
+            nivel = 1;
+
+
+            document
+                .getElementById("inicio")
+                .style
+                .display = "none";
+
+
+            document
+                .getElementById("resultado")
+                .style
+                .display = "none";
+
+
+            document
+                .getElementById("jogo")
+                .style
+                .display = "block";
+
+
+            atualizarStatus();
+
+            carregarPergunta();
+
+        }
+
+
+        function carregarPergunta() {
+
+
+            respondeu = false;
+
+
+            const pergunta =
+                perguntas[indice];
+
+
+            nivel =
+                pergunta.nivel;
+
+
+            document
+                .getElementById("nivelTexto")
+                .textContent =
+                pergunta.bonus
+                    ? " DESAFIO BÔNUS"
+                    : "Nível " + pergunta.nivel;
+
+
+            document
+                .getElementById("textoPergunta")
+                .textContent =
+                pergunta.pergunta;
+
+
+            document
+                .getElementById("codigo")
+                .textContent =
+                pergunta.codigo;
+
+
+            const opcoes =
+                document
+                .getElementById("opcoes");
+
+
+            opcoes.innerHTML = "";
+
+
+            pergunta.opcoes
+                .forEach(opcao => {
+
+
+                    const botao =
+                        document
+                        .createElement("button");
+
+
+                    botao.textContent =
+                        opcao;
+
+
+                    botao.onclick =
+                        () =>
+                        verificarResposta(
+                            botao,
+                            opcao
+                        );
+
+
+                    opcoes
+                        .appendChild(botao);
+
+                });
+
+
+            const feedback =
+                document
+                .getElementById("feedback");
+
+
+            feedback
+                .style
+                .display =
+                "none";
+
+
+            document
+                .getElementById("btnProxima")
+                .style
+                .display =
+                "none";
+
+
+            const progresso =
+                (indice /
+                perguntas.length) *
+                100;
+
+
+            document
+                .getElementById("barra")
+                .style
+                .width =
+                progresso + "%";
+
+
+            atualizarStatus();
+
+        }
+
+
+        function verificarResposta(
+            botao,
+            resposta
+        ) {
+
+
+            if (respondeu) {
+
+                return;
+
+            }
+
+
+            respondeu = true;
+
+
+            const pergunta =
+                perguntas[indice];
+
+
+            const feedback =
+                document
+                .getElementById("feedback");
+
+
+            const botoes =
+                document
+                .querySelectorAll(
+                    "#opcoes button"
+                );
+
+
+            botoes
+                .forEach(botao => {
+
+                    botao.disabled =
+                        true;
+
+                });
+
+
+            if (
+                resposta ===
+                pergunta.resposta
+            ) {
+
+
+                botao
+                    .classList
+                    .add("correta");
+
+
+                let pontos;
+
+
+                if (
+                    pergunta.bonus
+                ) {
+
+                    pontos = 10;
+
+                } else {
+
+                    pontos =
+                        pergunta.nivel *
+                        10;
+
+                }
+
+
+                pontuacao +=
+                    pontos;
+
+
+                feedback
+                    .textContent =
+                    "Correto! Você ganhou "
+                    + pontos
+                    + " pontos!";
+
+
+                feedback
+                    .className =
+                    "feedback certo";
+
+
+            } else {
+
+
+                botao
+                    .classList
+                    .add("errada");
+
+
+                vidas--;
+
+
+                feedback
+                    .textContent =
+                    "Resposta incorreta! "
+                    + "A resposta correta era: "
+                    + pergunta.resposta;
+
+
+                feedback
+                    .className =
+                    "feedback erro";
+
+
+                botoes
+                    .forEach(botao => {
+
+
+                        if (
+                            botao.textContent ===
+                            pergunta.resposta
+                        ) {
+
+                            botao
+                                .classList
+                                .add("correta");
+
+                        }
+
+                    });
+
+
+                if (
+                    vidas <= 0
+                ) {
+
+
+                    feedback
+                        .textContent +=
+                        " Você perdeu todas as vidas!";
+
+
+                    setTimeout(
+
+                        mostrarResultado,
+
+                        1800
+
+                    );
+
+
+                    return;
+
+                }
+
+            }
+
+
+            feedback
+                .style
+                .display =
+                "block";
+
+
+            atualizarStatus();
+
+
+            document
+                .getElementById("btnProxima")
+                .style
+                .display =
+                "inline-block";
+
+        }
+
+
+
+        function proximaPergunta() {
+
+
+            indice++;
+
+
+            if (
+                indice >=
+                perguntas.length
+            ) {
+
+
+                mostrarResultado();
+
+
+            } else {
+
+
+                carregarPergunta();
+
+            }
+
+        }
+
+        function atualizarStatus() {
+
+
+            document
+                .getElementById("pontuacao")
+                .textContent =
+                pontuacao;
+
+
+            document
+                .getElementById("nivel")
+                .textContent =
+                nivel;
+
+
+            document
+                .getElementById("vidas")
+                .textContent =
+                vidas;
+
+
+            document
+                .getElementById("questaoAtual")
+                .textContent =
+                Math.min(
+                    indice + 1,
+                    perguntas.length
+                );
+
+        }
+
+
+        function mostrarResultado() {
+
+
+            document
+                .getElementById("jogo")
+                .style
+                .display =
+                "none";
+
+
+            document
+                .getElementById("resultado")
+                .style
+                .display =
+                "block";
+
+
+            document
+                .getElementById("pontuacaoFinal")
+                .textContent =
+                pontuacao;
+
+
+            let mensagem;
+
+
+            if (
+                pontuacao >= 180
+            ) {
+
+
+                mensagem =
+                    "MESTRE DA LÓGICA! "
+                    + "Excelente desempenho!";
+
+
+            } else if (
+                pontuacao >= 140
+            ) {
+
+
+                mensagem =
+                    "EXCELENTE! "
+                    + "Você domina muito bem "
+                    + "a lógica de programação!";
+
+
+            } else if (
+                pontuacao >= 100
+            ) {
+
+
+                mensagem =
+                    "MUITO BOM! "
+                    + "Você possui uma boa base "
+                    + "de lógica!";
+
+
+            } else if (
+                pontuacao >= 60
+            ) {
+
+
+                mensagem =
+                    "BOM TRABALHO! "
+                    + "Continue praticando!";
+
+
+            } else {
+
+
+                mensagem =
+                    "Continue estudando. "
+                    + "A prática leva à evolução!";
+
+            }
+
+
+            document
+                .getElementById("classificacao")
+                .textContent =
+                mensagem;
+
+        }
+
+        function reiniciarJogo() {
+
+
+            document
+                .getElementById("resultado")
+                .style
+                .display =
+                "none";
+
+
+            document
+                .getElementById("inicio")
+                .style
+                .display =
+                "block";
+
+
+            document
+                .getElementById("pontuacao")
+                .textContent =
+                "0";
+
+
+            document
+                .getElementById("nivel")
+                .textContent =
+                "1";
+
+
+            document
+                .getElementById("vidas")
+                .textContent =
+                "3";
+
+
+            document
+                .getElementById("questaoAtual")
+                .textContent =
+                "0";
+
+
+            document
+                .getElementById("barra")
+                .style
+                .width =
+                "0%";
+
+        }
+
+
+    </script>
+
+</body>
+
+</html>
